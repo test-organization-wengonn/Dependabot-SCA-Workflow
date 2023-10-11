@@ -1,39 +1,16 @@
-name: GitHub Action To Create Clickup Card for Depandabot PR's
-run-name: GitHub Action To Create Clickup Card for Depandabot PR's 🚀
+name: GitHub Action Test
+run-name: GitHub Action Test
 on: 
   pull_request:
     types: opened
     
 jobs:
-  Get-Github-Actions-User:
-    if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }} # This step only runs when Dependabot has created the PR.
+  Test-Job:
     runs-on: ubuntu-latest
     
     permissions:
       pull-requests: read
       
     steps:  
-      - name: Depandabot - Clickup Integration 
+      - name: Test Step
         run: echo "🎉 The job was triggered by a ${{ github.actor }}." 
-
-      - name: Fetch Dependabot metadata
-        id: dependabot-metadata
-        uses: dependabot/fetch-metadata@v1
-        with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-        
-      - name: Create Clickup Task
-        id: clickup-task-creation
-        uses: security-binary/clickup-action@v1.9.33 # Use the desired tag version here, ideally latest
-        with:
-          clickup_api_token: "${{ secrets.CLICKUP_API_TOKEN }}"
-          github_token: "${{ secrets.PAT }}"
-          pull_request_title: "[${{ github.repository }}] - ${{ github.event.pull_request.title }}"
-          vulnerable_version: "${{ steps.dependabot-metadata.outputs.previous-version }}"
-          fixed_version: "${{ steps.dependabot-metadata.outputs.new-version }}"
-          dependency_type: "${{ steps.dependabot-metadata.outputs.dependency-type }}"
-          vulnerable_package: "${{ steps.dependabot-metadata.outputs.dependency-names }}"
-          pull_request_number: "${{ github.event.number }}"
-          github_repository: "${{ github.repository }}"
-          slack_webhook: "${{ secrets.SLACK_WEBHOOK }}" # Webhook of channel to send notification on failed runs
-          workflow_run_id: "${{ github.run_id }}"
